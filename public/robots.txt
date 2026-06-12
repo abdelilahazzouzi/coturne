@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /onboarding
+Disallow: /verify
+Disallow: /matches
+Disallow: /profile
+
+Sitemap: https://domicile-date.lovable.app/sitemap.xml

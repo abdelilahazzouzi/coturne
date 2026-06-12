@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS phone_visible_to_matches boolean NOT NULL DEFAULT false;

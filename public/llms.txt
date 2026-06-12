@@ -1,0 +1,9 @@
+# Roomies
+
+> Roomies matches you with compatible roommates based on budget, location, lifestyle, and habits. Swipe, match, and move in with confidence.
+
+## Pages
+
+- [Discover](/): Browse compatible roommate profiles and like to match.
+- [Sign in](/login): Sign in to your Roomies account.
+- [Create account](/signup): Create a Roomies account to start matching.

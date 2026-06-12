@@ -1,0 +1,23 @@
+// Moroccan cities only
+export const CITIES: string[] = [
+  "Casablanca",
+  "Rabat",
+  "Marrakech",
+  "Fes",
+  "Tangier",
+  "Agadir",
+  "Meknes",
+  "Oujda",
+  "Kenitra",
+  "Tetouan",
+  "Salé",
+  "Nador",
+  "El Jadida",
+  "Mohammedia",
+  "Essaouira",
+  "Chefchaouen",
+  "Ifrane",
+  "Ouarzazate",
+  "Dakhla",
+  "Laayoune",
+];

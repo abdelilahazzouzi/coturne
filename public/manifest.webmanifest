@@ -1,0 +1,25 @@
+{
+  "name": "Roomies — Find a Roommate in Morocco",
+  "short_name": "Roomies",
+  "description": "Find a compatible roommate in Casablanca, Rabat, Marrakech and other Moroccan cities.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#c4654a",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
