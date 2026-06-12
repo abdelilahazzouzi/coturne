@@ -13,7 +13,7 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { Toaster } from "@/components/ui/sonner";
 import { LocaleProvider, useT } from "@/i18n/LocaleProvider";
 
-function NotFoundComponent() {
+function NotFoundContent() {
   const t = useT();
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -34,7 +34,15 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function NotFoundComponent() {
+  return (
+    <LocaleProvider>
+      <NotFoundContent />
+    </LocaleProvider>
+  );
+}
+
+function ErrorContent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   const t = useT();
@@ -63,6 +71,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+  return (
+    <LocaleProvider>
+      <ErrorContent error={error} reset={reset} />
+    </LocaleProvider>
   );
 }
 
