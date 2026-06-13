@@ -1,0 +1,1 @@
+compatibility_flags = [ "nodejs_compat" ]`npages_build_output_dir = "dist/client"
