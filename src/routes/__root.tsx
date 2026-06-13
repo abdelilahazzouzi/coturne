@@ -52,6 +52,13 @@ function ErrorContent({ error, reset }: { error: Error; reset: () => void }) {
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">{t("err.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("err.desc")}</p>
+        
+        {error && (
+          <div className="mt-4 rounded-md border border-destructive/20 bg-destructive/5 p-3 text-left text-xs font-mono text-destructive max-w-md mx-auto overflow-auto max-h-40">
+            <strong>Error:</strong> {error.message || String(error)}
+          </div>
+        )}
+
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
