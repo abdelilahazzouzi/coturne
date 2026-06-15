@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/assets/*",
+    "/google58320b7af0fc0664.html",
+    "/hero-demo.mp4",
+    "/icon-512.png",
+    "/llms.txt",
+    "/manifest.webmanifest",
+    "/robots.txt",
+    "/favicon.ico"
+  ]
+}
