@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "postbuild": "node -e \"const fs = require('fs'); if(fs.existsSync('dist/server')){ fs.renameSync('dist/server', 'dist/client/_worker.js'); fs.renameSync('dist/client/_worker.js/server.js', 'dist/client/_worker.js/index.js'); } if(fs.existsSync('dist/client/wrangler.json')){ fs.rmSync('dist/client/wrangler.json'); }\"",
+    "postbuild": "node -e \"const fs = require('fs'); if(fs.existsSync('dist/server')){ fs.renameSync('dist/server', 'dist/client/_worker.js'); fs.writeFileSync('dist/client/_worker.js/index.js', 'export * from \\\"./server.js\\\"; export { default } from \\\"./server.js\\\";'); } if(fs.existsSync('dist/client/wrangler.json')){ fs.rmSync('dist/client/wrangler.json'); }\"",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
