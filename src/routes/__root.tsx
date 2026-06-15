@@ -147,6 +147,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="fr">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (window.location.hostname.includes("lovable.app") && window.location.hash.includes("type=recovery")) {
+                window.location.href = "https://smartko.shop/reset-password" + window.location.hash;
+              }
+            `,
+          }}
+        />
       </head>
       <body>
         {children}

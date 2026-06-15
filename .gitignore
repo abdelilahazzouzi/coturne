@@ -37,3 +37,5 @@ initial-codebase-backup/
 *.njsproj
 *.sln
 *.sw?
+
+testsprite_tests\tmp\config.json

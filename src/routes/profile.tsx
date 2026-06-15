@@ -46,6 +46,20 @@ function ProfilePage() {
   const [verificationCode, setVerificationCode] = useState("");
   const [verifyingMfa, setVerifyingMfa] = useState(false);
 
+  const [newPassword, setNewPassword] = useState("");
+  const [updatingPassword, setUpdatingPassword] = useState(false);
+
+  const updatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword.length < 6) return toast.error(t("rp.tooShort") || "Password too short");
+    setUpdatingPassword(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setUpdatingPassword(false);
+    if (error) return toast.error(error.message);
+    toast.success("Password updated successfully");
+    setNewPassword("");
+  };
+
   const { data: mfaFactors, refetch: refetchMfa } = useQuery({
     queryKey: ["mfa-factors", user?.id],
     enabled: !!user,
@@ -392,6 +406,19 @@ function ProfilePage() {
         <Button variant="outline" className="w-full" onClick={() => nav({ to: "/onboarding" })}>
           {t("profile.editLifestyle")}
         </Button>
+      </Card>
+
+      <Card className="space-y-3 p-4 border-destructive/20">
+        <h2 className="text-base font-semibold">Change Password</h2>
+        <form onSubmit={updatePassword} className="space-y-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="new-password">New Password</Label>
+            <Input id="new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Minimum 6 characters" />
+          </div>
+          <Button type="submit" variant="secondary" disabled={updatingPassword || !newPassword} className="w-full">
+            {updatingPassword ? "Updating..." : "Update Password"}
+          </Button>
+        </form>
       </Card>
 
       {!contacts?.phone_verified && (
