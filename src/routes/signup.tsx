@@ -18,9 +18,9 @@ export const Route = createFileRoute("/signup")({
       { name: "description", content: "Inscrivez-vous sur Roomies en moins d'une minute et commencez à matcher avec des colocataires compatibles dans votre ville." },
       { property: "og:title", content: "Créer un compte Roomies" },
       { property: "og:description", content: "Inscrivez-vous sur Roomies en moins d'une minute et commencez à matcher avec des colocataires compatibles dans votre ville." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/signup" },
+      { property: "og:url", content: "https://smartko.shop/signup" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/signup" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/signup" }],
   }),
   component: SignupPage,
 });

@@ -30,9 +30,9 @@ export const Route = createFileRoute("/profile_/$id")({
       { property: "og:title", content: "Roommate profile — Roomies" },
       { property: "og:description", content: "View this Roomies member's lifestyle, budget, and contact details to decide if you'd be a good roommate fit." },
       { property: "og:type", content: "profile" },
-      { property: "og:url", content: `https://domicile-date.lovable.app/profile/${params.id}` },
+      { property: "og:url", content: `https://smartko.shop/profile/${params.id}` },
     ],
-    links: [{ rel: "canonical", href: `https://domicile-date.lovable.app/profile/${params.id}` }],
+    links: [{ rel: "canonical", href: `https://smartko.shop/profile/${params.id}` }],
     scripts: [
       {
         type: "application/ld+json",

@@ -22,9 +22,9 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Zéro commission. Zéro samsar. Roomies vous matche avec des colocataires compatibles et vérifiés à Casablanca, Rabat, Marrakech et partout au Maroc — selon votre style de vie." },
       { property: "og:title", content: "Roomies — Zéro samsar. Colocataires compatibles au Maroc." },
       { property: "og:description", content: "Zéro commission. Zéro samsar. Roomies vous matche avec des colocataires compatibles à Casablanca, Rabat, Marrakech et partout au Maroc." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/" },
+      { property: "og:url", content: "https://smartko.shop/" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/" }],
   }),
   component: LandingPage,
 });

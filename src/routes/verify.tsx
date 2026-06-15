@@ -20,9 +20,9 @@ export const Route = createFileRoute("/verify")({
       { name: "description", content: "Confirmez votre numéro pour obtenir le badge vérifié et débloquer le contact direct avec vos matchs." },
       { property: "og:title", content: "Vérifier votre numéro — Roomies" },
       { property: "og:description", content: "Confirmez votre numéro pour obtenir le badge vérifié et débloquer le contact direct avec vos matchs." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/verify" },
+      { property: "og:url", content: "https://smartko.shop/verify" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/verify" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/verify" }],
   }),
   component: () => (
     <RequireAuth requireOnboarded={false}>

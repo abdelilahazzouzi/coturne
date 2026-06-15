@@ -18,9 +18,9 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Connectez-vous à Roomies pour continuer à découvrir, discuter avec vos matchs et mettre à jour votre profil colocataire." },
       { property: "og:title", content: "Connexion — Roomies" },
       { property: "og:description", content: "Connectez-vous à Roomies pour continuer à découvrir, discuter avec vos matchs et mettre à jour votre profil colocataire." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/login" },
+      { property: "og:url", content: "https://smartko.shop/login" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/login" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/login" }],
   }),
   component: LoginPage,
 });

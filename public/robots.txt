@@ -6,4 +6,4 @@ Disallow: /verify
 Disallow: /matches
 Disallow: /profile
 
-Sitemap: https://domicile-date.lovable.app/sitemap.xml
+Sitemap: https://smartko.shop/sitemap.xml

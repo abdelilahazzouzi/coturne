@@ -28,9 +28,9 @@ export const Route = createFileRoute("/onboarding")({
       { name: "description", content: "Tell us about yourself, your budget, and your lifestyle so Roomies can match you with compatible roommates." },
       { property: "og:title", content: "Set up your profile — Roomies" },
       { property: "og:description", content: "Tell us about yourself, your budget, and your lifestyle so Roomies can match you with compatible roommates." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/onboarding" },
+      { property: "og:url", content: "https://smartko.shop/onboarding" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/onboarding" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/onboarding" }],
   }),
   component: Onboarding,
 });

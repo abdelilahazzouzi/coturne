@@ -22,9 +22,9 @@ export const Route = createFileRoute("/profile")({
       { name: "description", content: "Manage your Roomies profile: photo, bio, contact details, and what you share with matches." },
       { property: "og:title", content: "Your profile — Roomies" },
       { property: "og:description", content: "Manage your Roomies profile: photo, bio, contact details, and what you share with matches." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/profile" },
+      { property: "og:url", content: "https://smartko.shop/profile" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/profile" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/profile" }],
   }),
   component: () => (
     <RequireAuth>

@@ -16,9 +16,9 @@ export const Route = createFileRoute("/matches")({
       { name: "description", content: "Découvrez les colocataires qui vous ont aussi liké(e). Ouvrez un match pour voir son profil et ses contacts." },
       { property: "og:title", content: "Vos matchs — Roomies" },
       { property: "og:description", content: "Découvrez les colocataires qui vous ont aussi liké(e). Ouvrez un match pour voir son profil et ses contacts." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/matches" },
+      { property: "og:url", content: "https://smartko.shop/matches" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/matches" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/matches" }],
   }),
   component: () => (
     <RequireAuth>

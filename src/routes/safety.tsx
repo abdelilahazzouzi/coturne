@@ -27,9 +27,9 @@ export const Route = createFileRoute("/safety")({
         content:
           "Comment rencontrer un futur colocataire en toute sécurité, repérer les samsara et éviter les arnaques.",
       },
-      { property: "og:url", content: "https://domicile-date.lovable.app/safety" },
+      { property: "og:url", content: "https://smartko.shop/safety" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/safety" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/safety" }],
   }),
   component: SafetyPage,
 });

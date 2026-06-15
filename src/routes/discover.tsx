@@ -31,9 +31,9 @@ export const Route = createFileRoute("/discover")({
       { name: "description", content: "Browse compatible roommate profiles in your city. Filter by budget, lifestyle, and habits, then like to match." },
       { property: "og:title", content: "Discover roommates — Roomies" },
       { property: "og:description", content: "Browse compatible roommate profiles in your city. Filter by budget, lifestyle, and habits, then like to match." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/discover" },
+      { property: "og:url", content: "https://smartko.shop/discover" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/discover" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/discover" }],
   }),
   component: () => (
     <RequireAuth>

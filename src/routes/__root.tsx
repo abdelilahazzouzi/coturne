@@ -124,12 +124,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             {
               "@type": "WebSite",
               name: "Roomies",
-              url: "https://domicile-date.lovable.app",
+              url: "https://smartko.shop",
             },
             {
               "@type": "Organization",
               name: "Roomies",
-              url: "https://domicile-date.lovable.app",
+              url: "https://smartko.shop",
             },
           ],
         }),

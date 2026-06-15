@@ -16,9 +16,9 @@ export const Route = createFileRoute("/forgot-password")({
       { name: "description", content: "Réinitialisez votre mot de passe Roomies. Nous vous enverrons un lien sécurisé par e-mail." },
       { property: "og:title", content: "Mot de passe oublié — Roomies" },
       { property: "og:description", content: "Réinitialisez votre mot de passe Roomies. Nous vous enverrons un lien sécurisé par e-mail." },
-      { property: "og:url", content: "https://domicile-date.lovable.app/forgot-password" },
+      { property: "og:url", content: "https://smartko.shop/forgot-password" },
     ],
-    links: [{ rel: "canonical", href: "https://domicile-date.lovable.app/forgot-password" }],
+    links: [{ rel: "canonical", href: "https://smartko.shop/forgot-password" }],
   }),
   component: ForgotPasswordPage,
 });
