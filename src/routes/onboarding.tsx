@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useId, useMemo, useCallback, cloneElement, isValidElement } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,6 +71,7 @@ const STEPS = ["About you", "Where & budget", "Lifestyle", "Cultural fit", "Bio 
 function Onboarding() {
   const { user, loading } = useAuth();
   const nav = useNavigate();
+  const queryClient = useQueryClient();
   const submitFn = useServerFn(submitOnboarding);
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -202,6 +204,9 @@ function Onboarding() {
           },
         },
       });
+      // Synchronously update the cache to prevent RequireAuth from redirecting back to /onboarding
+      queryClient.setQueryData(["profile", user.id], (old: any) => ({ ...old, onboarded: true }));
+      await queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
       setBusy(false);
       if (res.isMinor) {
         toast.success("Profile submitted for review");

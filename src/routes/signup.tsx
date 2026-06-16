@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
-import { GoogleButton } from "@/components/GoogleButton";
 import { useT, LanguageSwitcher } from "@/i18n/LocaleProvider";
 
 export const Route = createFileRoute("/signup")({
@@ -33,6 +32,7 @@ function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [signupError, setSignupError] = useState("");
 
   useEffect(() => {
     if (!loading && user) nav({ to: "/" });
@@ -40,6 +40,7 @@ function SignupPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSignupError("");
     setBusy(true);
     const { error } = await supabase.auth.signUp({
       email,
@@ -47,7 +48,14 @@ function SignupPage() {
       options: { emailRedirectTo: window.location.origin, data: { display_name: name } },
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      const msg = error.message.toLowerCase().includes("already registered")
+        ? t("auth.emailInUse")
+        : error.message;
+      setSignupError(msg);
+      toast.error(msg);
+      return;
+    }
     toast.success(t("auth.createdToast"));
     nav({ to: "/onboarding" });
   };
@@ -63,25 +71,26 @@ function SignupPage() {
             <Heart className="h-6 w-6" />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">{t("auth.createTitle")}</h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">{t("auth.oneTapMatch")}</p>
-        </div>
-        <GoogleButton label={t("auth.google.signup")} />
-        <div className="my-6 flex items-center gap-2 text-xs text-muted-foreground">
-          <div className="h-px flex-1 bg-border" /> {t("auth.orEmail")} <div className="h-px flex-1 bg-border" />
+          <p className="text-sm leading-relaxed text-muted-foreground">{t("auth.createEmail")}</p>
         </div>
         <form onSubmit={submit} className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="name">{t("auth.firstName")}</Label>
-            <Input id="name" autoFocus required value={name} onChange={(e) => setName(e.target.value)} />
+            <Input id="name" autoFocus required value={name} onChange={(e) => { setName(e.target.value); setSignupError(""); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">{t("common.email")}</Label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input id="email" type="email" required value={email} onChange={(e) => { setEmail(e.target.value); setSignupError(""); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">{t("common.password")}</Label>
-            <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => { setPassword(e.target.value); setSignupError(""); }} />
           </div>
+          {signupError && (
+            <div className="rounded-md bg-destructive/15 p-3 text-sm font-medium text-destructive" role="alert">
+              {signupError}
+            </div>
+          )}
           <Button type="submit" variant="secondary" className="w-full" disabled={busy}>
             {busy ? t("auth.creating") : t("auth.createEmail")}
           </Button>

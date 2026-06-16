@@ -8,7 +8,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import heroMedinaSunset from "@/assets/hero-medina-sunset.jpg";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const loc = useLocation();
@@ -65,9 +64,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
     <div className="relative flex min-h-screen flex-col overflow-hidden">
       <div
         aria-hidden="true"
-        className="fixed inset-0 -z-10 bg-cover bg-center"
+        className="fixed inset-0 -z-10"
         style={{
-          backgroundImage: `linear-gradient(to bottom, color-mix(in oklab, var(--background) 12%, transparent), color-mix(in oklab, var(--background) 68%, transparent) 62%, var(--background)), url(${heroMedinaSunset})`,
+          background: `linear-gradient(to bottom, color-mix(in oklab, var(--background) 12%, transparent), color-mix(in oklab, var(--background) 68%, transparent) 62%, var(--background))`
         }}
       />
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/70 px-4 py-3 backdrop-blur-md">

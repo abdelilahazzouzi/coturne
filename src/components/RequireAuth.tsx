@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 export function RequireAuth({ children, requireOnboarded = true }: { children: ReactNode; requireOnboarded?: boolean }) {
   const { user, loading } = useAuth();
   const nav = useNavigate();
+  const [checkingAal, setCheckingAal] = useState(true);
 
   const { data: profile, isLoading: pLoading } = useQuery({
     queryKey: ["profile", user?.id],
@@ -21,15 +22,24 @@ export function RequireAuth({ children, requireOnboarded = true }: { children: R
   useEffect(() => {
     if (loading) return;
     if (!user) {
+      setCheckingAal(false);
       nav({ to: "/login" });
       return;
     }
-    if (requireOnboarded && profile && !profile.onboarded) {
-      nav({ to: "/onboarding" });
-    }
+    
+    supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => {
+      if (data?.nextLevel === "aal2" && data?.currentLevel === "aal1") {
+        nav({ to: "/login" });
+      } else {
+        setCheckingAal(false);
+        if (requireOnboarded && profile && !profile.onboarded) {
+          nav({ to: "/onboarding" });
+        }
+      }
+    });
   }, [user, loading, profile, requireOnboarded, nav]);
 
-  if (loading || (user && pLoading)) {
+  if (loading || (user && pLoading) || checkingAal) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />

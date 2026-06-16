@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Heart, X, MapPin, Briefcase, Sparkles, SlidersHorizontal, Check, ChevronsUpDown, Crown } from "lucide-react";
+import { Heart, X, MapPin, Briefcase, Sparkles, SlidersHorizontal, Check, ChevronsUpDown, Crown, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CITIES } from "@/lib/cities";
 import { canSeePhoto, canMatch } from "@/lib/visibility";
@@ -132,7 +132,7 @@ function Discover() {
     enabled: !!user && !!me,
     queryFn: async () => {
       const [{ data: profiles }, { data: likes }, { data: blocks }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("onboarded", true).neq("id", user!.id),
+        supabase.from("profiles").select("*, profile_contacts(phone_verified)").eq("onboarded", true).neq("id", user!.id),
         supabase.from("likes").select("to_user").eq("from_user", user!.id),
         supabase.from("blocks").select("blocked_id").eq("blocker_id", user!.id),
       ]);
@@ -169,8 +169,17 @@ function Discover() {
         if (filters.social.length && (!p.social_level || !filters.social.includes(p.social_level as string))) return false;
         return true;
       });
-      return matched
-        .map((p) => {
+      let myEmbedding: number[] | null = null;
+      try {
+          if (me?.bio) {
+              const { AIEmbeddings } = await import("@/lib/ai/embeddings");
+              myEmbedding = await AIEmbeddings.getEmbedding(me.bio);
+          }
+      } catch (e) {
+          console.error("AI embeddings not available", e);
+      }
+
+      const scored = await Promise.all(matched.map(async (p) => {
           let distance: number | null = null;
           if (me?.latitude && me?.longitude && p.latitude && p.longitude) {
             distance = getDistanceInKm(
@@ -178,13 +187,31 @@ function Discover() {
               { lat: p.latitude, lng: p.longitude }
             );
           }
+
+          let baseScore = score(me!, p as Profile);
+          
+          if (myEmbedding && p.bio) {
+              try {
+                  const { AIEmbeddings } = await import("@/lib/ai/embeddings");
+                  const theirEmbedding = await AIEmbeddings.getEmbedding(p.bio);
+                  const similarity = AIEmbeddings.cosineSimilarity(myEmbedding, theirEmbedding);
+                  if (similarity > 0) {
+                      // Boost score by up to 20% based on semantic similarity
+                      baseScore = Math.min(100, Math.round(baseScore + (similarity * 20)));
+                  }
+              } catch (e) {
+                  // ignore
+              }
+          }
+
           return {
             p: p as Profile,
-            s: score(me!, p as Profile),
+            s: baseScore,
             distance,
           };
-        })
-        .sort((a, b) => b.s - a.s);
+      }));
+
+      return scored.sort((a, b) => b.s - a.s);
     },
   });
 
@@ -442,7 +469,7 @@ function CandidateCard({ profile, score, distance, viewerGender }: { profile: Pr
           <img src={profile.photo_url} alt={profile.display_name} className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full items-center justify-center text-6xl font-semibold text-primary-foreground">
-            {profile.display_name.charAt(0).toUpperCase()}
+            {profile.display_name?.charAt(0)?.toUpperCase()}
           </div>
         )}
         <div className={cn("absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold shadow backdrop-blur", scoreClass)}>
@@ -450,7 +477,12 @@ function CandidateCard({ profile, score, distance, viewerGender }: { profile: Pr
         </div>
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
           <div className="flex items-baseline gap-2">
-            <h2 className="text-2xl font-semibold">{profile.display_name}</h2>
+            <h2 className="text-2xl font-semibold flex items-center gap-1.5">
+              {profile.display_name}
+              {(profile as any).profile_contacts?.[0]?.phone_verified && (
+                <BadgeCheck className="h-5 w-5 text-blue-400 fill-blue-400/20" aria-label="Verified" />
+              )}
+            </h2>
             {profile.age && <span className="text-lg">{profile.age}</span>}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-3 text-sm opacity-90">

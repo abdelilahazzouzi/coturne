@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
-import { GoogleButton } from "@/components/GoogleButton";
 import { useT, LanguageSwitcher } from "@/i18n/LocaleProvider";
 
 export const Route = createFileRoute("/login")({
@@ -32,26 +31,73 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
+  const [needsMfa, setNeedsMfa] = useState(false);
+  const [mfaCode, setMfaCode] = useState("");
 
   useEffect(() => {
-    if (!loading && user) nav({ to: "/" });
+    if (!loading && user) {
+      supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => {
+        if (data?.nextLevel === "aal2" && data?.currentLevel === "aal1") {
+          setNeedsMfa(true);
+        } else {
+          nav({ to: "/" });
+        }
+      });
+    }
   }, [user, loading, nav]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let submittedPassword = password;
+    setLoginError("");
 
-    // TestSprite Bypass: If the automated agent submits an empty password for the test account, intercept and inject the password.
-    if (email === "abdelilah.me@hotmail.com" && !password) {
-      submittedPassword = "REPLACE_ME_TEST_PASSWORD"; // Please update this to the real password!
-    } else if (!password) {
-      return toast.error("Le mot de passe est requis");
+    if (!password) {
+      const msg = t("auth.passwordRequired");
+      setLoginError(msg);
+      toast.error(msg);
+      return;
     }
 
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password: submittedPassword });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      const msg = t("auth.invalidCredentials");
+      setLoginError(msg);
+      toast.error(msg);
+      return;
+    }
+    // The useEffect will handle AAL check and navigation automatically because `user` updates
+  };
+
+  const submitMfa = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    const { data: factors } = await supabase.auth.mfa.listFactors();
+    const totpFactor = factors?.totp?.[0];
+    if (!totpFactor) {
+      setBusy(false);
+      return toast.error("No TOTP factor found");
+    }
+
+    const { data: challenge, error: challengeErr } = await supabase.auth.mfa.challenge({ factorId: totpFactor.id });
+    if (challengeErr) {
+      setBusy(false);
+      return toast.error(challengeErr.message);
+    }
+
+    const { error: verifyErr } = await supabase.auth.mfa.verify({
+      factorId: totpFactor.id,
+      challengeId: challenge.id,
+      code: mfaCode,
+    });
+    setBusy(false);
+    
+    if (verifyErr) {
+      return toast.error(verifyErr.message);
+    }
+    
     nav({ to: "/" });
   };
 
@@ -66,36 +112,63 @@ function LoginPage() {
             <Heart className="h-6 w-6" />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">{t("auth.welcomeBack")}</h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">{t("auth.oneTap")}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{t("auth.signinEmail")}</p>
         </div>
-        <GoogleButton label={t("auth.google.signin")} />
-        <div className="my-6 flex items-center gap-2 text-xs text-muted-foreground">
-          <div className="h-px flex-1 bg-border" /> {t("auth.orEmail")} <div className="h-px flex-1 bg-border" />
-        </div>
-        <form onSubmit={submit} className="space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("common.email")}</Label>
-            <Input id="email" type="email" autoFocus required value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">{t("common.password")}</Label>
-              <Link to="/forgot-password" className="text-xs font-medium text-primary hover:underline">
-                {t("auth.forgot")}
-              </Link>
+        {needsMfa ? (
+          <form onSubmit={submitMfa} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="mfa">Enter 6-digit code from your authenticator app</Label>
+              <Input 
+                id="mfa" 
+                type="text" 
+                autoFocus 
+                required 
+                value={mfaCode} 
+                onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                className="text-center text-lg tracking-widest font-mono"
+                placeholder="000000"
+              />
             </div>
-            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
-          <Button type="submit" variant="secondary" className="w-full" disabled={busy}>
-            {busy ? t("auth.signingIn") : t("auth.signinEmail")}
-          </Button>
-        </form>
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          {t("auth.newHere")}{" "}
-          <Link to="/signup" className="font-medium text-primary hover:underline">
-            {t("auth.createAccount")}
-          </Link>
-        </p>
+            <Button type="submit" className="w-full" disabled={busy || mfaCode.length !== 6}>
+              {busy ? "Verifying..." : "Verify"}
+            </Button>
+            <Button type="button" variant="ghost" className="w-full text-xs text-muted-foreground" onClick={() => supabase.auth.signOut()}>
+              Cancel and sign out
+            </Button>
+          </form>
+        ) : (
+          <>
+            <form onSubmit={submit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("common.email")}</Label>
+                <Input id="email" type="email" autoFocus required value={email} onChange={(e) => { setEmail(e.target.value); setLoginError(""); }} />
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">{t("common.password")}</Label>
+                  <Link to="/forgot-password" className="text-xs font-medium text-primary hover:underline">
+                    {t("auth.forgot")}
+                  </Link>
+                </div>
+                <Input id="password" type="password" value={password} onChange={(e) => { setPassword(e.target.value); setLoginError(""); }} />
+              </div>
+              {loginError && (
+                <div className="rounded-md bg-destructive/15 p-3 text-sm font-medium text-destructive" role="alert">
+                  {loginError}
+                </div>
+              )}
+              <Button type="submit" variant="secondary" className="w-full" disabled={busy}>
+                {busy ? t("auth.signingIn") : t("auth.signinEmail")}
+              </Button>
+            </form>
+            <p className="mt-6 text-center text-sm text-muted-foreground">
+              {t("auth.newHere")}{" "}
+              <Link to="/signup" className="font-medium text-primary hover:underline">
+                {t("auth.createAccount")}
+              </Link>
+            </p>
+          </>
+        )}
       </Card>
     </main>
   );

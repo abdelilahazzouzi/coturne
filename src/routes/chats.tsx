@@ -124,7 +124,7 @@ function Chats() {
                   <img src={p.photo_url} alt={p.display_name} className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full items-center justify-center font-semibold text-primary-foreground">
-                    {p.display_name.charAt(0).toUpperCase()}
+                    {p.display_name?.charAt(0)?.toUpperCase()}
                   </div>
                 )}
               </div>

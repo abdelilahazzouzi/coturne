@@ -1,0 +1,123 @@
+version: "2"
+type: frontend
+tech_stack:
+  - React
+  - Vite
+  - TanStack Router
+  - TanStack Query
+  - Tailwind CSS
+  - shadcn/ui
+  - Supabase Auth
+  - Supabase Realtime
+routes:
+  - path: /login
+    file: src/routes/login.tsx
+    auth_required: false
+    description: User login page with MFA TOTP verification
+  - path: /signup
+    file: src/routes/signup.tsx
+    auth_required: false
+    description: User registration
+  - path: /forgot-password
+    file: src/routes/forgot-password.tsx
+    auth_required: false
+    description: Password recovery request
+  - path: /reset-password
+    file: src/routes/reset-password.tsx
+    auth_required: false
+    description: Reset password with new credentials
+  - path: /
+    file: src/routes/index.tsx
+    auth_required: true
+    description: Main home feed
+  - path: /profile
+    file: src/routes/profile.tsx
+    auth_required: true
+    description: Manage profile, photo, 2FA MFA enrollment, and preferences
+  - path: /onboarding
+    file: src/routes/onboarding.tsx
+    auth_required: true
+    description: Multi-step user onboarding flow (identity, preferences, lifestyle)
+  - path: /admin
+    file: src/routes/admin.tsx
+    auth_required: true
+    description: Admin dashboard requiring AAL2 MFA verification for minor profile approvals and moderation reports
+  - path: /discover
+    file: src/routes/discover.tsx
+    auth_required: true
+    description: Swipe-style interface to find roommates
+  - path: /places
+    file: src/routes/places.tsx
+    auth_required: true
+    description: Browse apartment listings
+  - path: /places/new
+    file: src/routes/places.new.tsx
+    auth_required: true
+    description: Create a new apartment listing
+  - path: /matches
+    file: src/routes/matches.tsx
+    auth_required: true
+    description: View matched roommates
+  - path: /chats
+    file: src/routes/chats.tsx
+    auth_required: true
+    description: Message inbox and chat list
+features:
+  - name: User Authentication
+    description: Login, Registration, Password Recovery, and MFA
+    files:
+      - src/routes/login.tsx
+      - src/routes/signup.tsx
+      - src/components/RequireAuth.tsx
+    entry_route: /login
+    user_interactions:
+      - Fill email and password
+      - Click Login button
+      - If MFA enrolled, enter 6-digit TOTP code
+    api_calls:
+      - method: POST
+        endpoint: supabase.auth.signInWithPassword
+      - method: POST
+        endpoint: supabase.auth.mfa.verify
+    auth_required: false
+  - name: User Onboarding
+    description: Multi-step process to gather user lifestyle preferences
+    files:
+      - src/routes/onboarding.tsx
+    entry_route: /onboarding
+    user_interactions:
+      - Select identity and preferences
+      - Navigate through multi-step form
+      - Submit final profile data
+    api_calls:
+      - method: POST
+        endpoint: submitOnboarding server function
+    auth_required: true
+  - name: Matchmaking Discovery
+    description: Swipe on potential roommates
+    files:
+      - src/routes/discover.tsx
+    entry_route: /discover
+    user_interactions:
+      - View user cards
+      - Swipe left (pass) or right (like)
+    api_calls:
+      - method: GET
+        endpoint: supabase.rpc(matchmaking)
+      - method: POST
+        endpoint: supabase.from(user_interactions)
+    auth_required: true
+  - name: Admin Dashboard Moderation
+    description: Review minor profiles and reports
+    files:
+      - src/routes/admin.tsx
+      - src/lib/admin.functions.ts
+    entry_route: /admin
+    user_interactions:
+      - View pending profiles
+      - Click Approve or Reject buttons
+    api_calls:
+      - method: POST
+        endpoint: decideMinorReview server function
+    auth_required: true
+known_limitations: []

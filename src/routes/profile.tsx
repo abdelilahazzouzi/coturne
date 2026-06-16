@@ -211,7 +211,7 @@ function ProfilePage() {
               <img src={profile.photo_url} alt={profile.display_name} className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full items-center justify-center text-3xl font-semibold text-primary-foreground">
-                {profile.display_name?.charAt(0).toUpperCase()}
+                {profile.display_name?.charAt(0)?.toUpperCase()}
               </div>
             )}
           </div>

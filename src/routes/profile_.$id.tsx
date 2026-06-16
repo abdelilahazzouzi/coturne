@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, ArrowRight, Flag, Ban, MapPin, Briefcase, PartyPopper, Check, X as XIcon, MessageCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Flag, Ban, MapPin, Briefcase, PartyPopper, Check, X as XIcon, MessageCircle, BadgeCheck } from "lucide-react";
 import { canSeePhoto } from "@/lib/visibility";
 import { scoreDetail, type Profile } from "@/lib/matching";
 import { labelGuests, labelAlcohol, labelPrayer, labelFood } from "@/lib/cultural";
@@ -72,7 +72,7 @@ function ProfileDetail() {
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+      const { data, error } = await supabase.from("profiles").select("*, profile_contacts(phone_verified)").eq("id", id).maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -213,12 +213,17 @@ function ProfileDetail() {
             <img src={profile.photo_url} alt={profile.display_name} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center text-6xl font-semibold text-primary-foreground">
-              {profile.display_name.charAt(0).toUpperCase()}
+              {profile.display_name?.charAt(0)?.toUpperCase()}
             </div>
           )}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
             <div className="flex items-baseline gap-2">
-              <h1 className="text-2xl font-semibold">{profile.display_name}</h1>
+              <h1 className="text-2xl font-semibold flex items-center gap-1.5">
+                {profile.display_name}
+                {(profile as any).profile_contacts?.[0]?.phone_verified && (
+                  <BadgeCheck className="h-5 w-5 text-blue-400 fill-blue-400/20" aria-label="Verified" />
+                )}
+              </h1>
               {profile.age && <span className="text-lg">{profile.age}</span>}
             </div>
             <div className="mt-1 flex flex-wrap gap-3 text-sm opacity-90">

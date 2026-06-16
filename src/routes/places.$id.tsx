@@ -278,7 +278,7 @@ function PlaceDetail() {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center font-semibold text-primary-foreground">
-                    {host.display_name.charAt(0).toUpperCase()}
+                    {host.display_name?.charAt(0)?.toUpperCase()}
                   </div>
                 )}
               </div>

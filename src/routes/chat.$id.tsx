@@ -15,6 +15,7 @@ import { ProposeViewingSheet } from "@/components/chat/ProposeViewingSheet";
 import { PlaceRefBubble } from "@/components/chat/PlaceRefBubble";
 import { ViewingBubble } from "@/components/chat/ViewingBubble";
 import { AttachmentBubble } from "@/components/chat/AttachmentBubble";
+import { LeaseChecklist } from "@/components/chat/LeaseChecklist";
 import { useT } from "@/i18n/LocaleProvider";
 
 export const Route = createFileRoute("/chat/$id")({
@@ -242,7 +243,7 @@ function Chat() {
                 <img src={other.photo_url} alt={other.display_name} className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center font-semibold text-primary-foreground">
-                  {other.display_name.charAt(0).toUpperCase()}
+                  {other.display_name?.charAt(0)?.toUpperCase()}
                 </div>
               )}
             </div>
@@ -269,6 +270,8 @@ function Chat() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <LeaseChecklist />
 
       {showSafety && (
         <div className="border-b border-border bg-accent/30 px-4 py-3 text-sm">
