@@ -5,7 +5,7 @@ env.allowLocalModels = false;
 
 // We use the Singleton pattern so that the pipeline is only loaded once.
 class PipelineSingleton {
-    static task = 'feature-extraction';
+    static task: any = 'feature-extraction';
     static model = 'Xenova/all-MiniLM-L6-v2';
     static instance: any = null;
 

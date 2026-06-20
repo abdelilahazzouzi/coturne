@@ -17,7 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CITIES } from "@/lib/cities";
+import { useCities } from "@/lib/cities";
 import { GUESTS_OPTIONS, ALCOHOL_OPTIONS, PRAYER_OPTIONS, FOOD_OPTIONS, LANGUAGE_OPTIONS } from "@/lib/cultural";
 import { toast } from "sonner";
 import { NEIGHBORHOODS, getCoordinatesForNeighborhood } from "@/lib/neighborhoods";
@@ -161,6 +161,7 @@ function Onboarding() {
     }
   };
 
+  const { cities: dynamicCities } = useCities();
   const next = () => setStep((s) => Math.min(STEPS.length - 1, s + 1));
   const back = () => setStep((s) => Math.max(0, s - 1));
 
@@ -449,18 +450,19 @@ function SelectField({ value, onValueChange, options, label }: { value: string; 
 
 function CityCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false);
+  const { cities: dynamicCities } = useCities();
   const handleSelect = useCallback((c: string) => {
     onChange(c);
     setOpen(false);
   }, [onChange]);
   const items = useMemo(
-    () => CITIES.map((c) => (
+    () => dynamicCities.map((c) => (
       <CommandItem key={c} value={c} onSelect={() => handleSelect(c)}>
         <Check className={cn("me-2 h-4 w-4", value === c ? "opacity-100" : "opacity-0")} />
         {c}
       </CommandItem>
     )),
-    [value, handleSelect],
+    [value, handleSelect, dynamicCities],
   );
   return (
     <Popover open={open} onOpenChange={setOpen}>

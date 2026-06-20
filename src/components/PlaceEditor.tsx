@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { CITIES } from "@/lib/cities";
+import { useCities, DEFAULT_CITIES } from "@/lib/cities";
 import { toast } from "sonner";
 import { Lock, Sparkles } from "lucide-react";
 import { useT } from "@/i18n/LocaleProvider";
@@ -32,7 +32,7 @@ type PlaceForm = {
 const empty: PlaceForm = {
   title: "",
   description: "",
-  city: CITIES[0],
+  city: DEFAULT_CITIES[0],
   neighborhood: "",
   rent_monthly: 2000,
   currency: "MAD",
@@ -49,6 +49,7 @@ export function PlaceEditor({ initial }: { initial?: PlaceForm }) {
   const { user } = useAuth();
   const nav = useNavigate();
   const t = useT();
+  const { cities: dynamicCities } = useCities();
   const [form, setForm] = useState<PlaceForm>(initial ?? empty);
   const [saving, setSaving] = useState(false);
   const isEdit = !!initial?.id;
@@ -177,7 +178,7 @@ export function PlaceEditor({ initial }: { initial?: PlaceForm }) {
               onChange={(e) => set("city", e.target.value)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              {CITIES.map((c) => (
+              {dynamicCities.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>

@@ -9,10 +9,12 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert, MapPin, Briefcase } from "lucide-react";
+import { ShieldAlert, MapPin, Briefcase, X } from "lucide-react";
 import { toast } from "sonner";
 import { decideMinorReview } from "@/lib/admin.functions";
 import { cn } from "@/lib/utils";
+import { useCities } from "@/lib/cities";
+import { Input } from "@/components/ui/input";
 
 const BANNER_TEXT = {
   EN: {
@@ -51,6 +53,31 @@ function Admin() {
   const qc = useQueryClient();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [bannerLang, setBannerLang] = useState<"EN" | "AR" | "FR">("EN");
+  const { cities, saveCities, isSaving } = useCities();
+  const [newCity, setNewCity] = useState("");
+
+  const handleAddCity = async () => {
+    if (!newCity.trim() || !user) return;
+    const city = newCity.trim();
+    if (cities.includes(city)) return toast.error("City already exists");
+    try {
+      await saveCities({ cities: [...cities, city], userId: user.id });
+      setNewCity("");
+      toast.success("City added successfully");
+    } catch (e: any) {
+      toast.error(e.message || "Failed to add city");
+    }
+  };
+
+  const handleRemoveCity = async (cityToRemove: string) => {
+    if (!user) return;
+    try {
+      await saveCities({ cities: cities.filter((c) => c !== cityToRemove), userId: user.id });
+      toast.success("City removed successfully");
+    } catch (e: any) {
+      toast.error(e.message || "Failed to remove city");
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -223,6 +250,38 @@ function Admin() {
             {r.details && <p className="text-sm text-muted-foreground">{r.details}</p>}
           </Card>
         ))}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight">Manage Cities</h2>
+        <p className="text-sm text-muted-foreground">Add or remove cities available for selection across the app.</p>
+        <Card className="p-4 space-y-4">
+          <div className="flex items-center gap-2">
+            <Input 
+              placeholder="e.g. Agadir" 
+              value={newCity} 
+              onChange={(e) => setNewCity(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAddCity()}
+            />
+            <Button onClick={handleAddCity} disabled={!newCity.trim() || isSaving}>Add City</Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {cities.map((city) => (
+              <Badge key={city} variant="secondary" className="px-3 py-1 text-sm flex items-center gap-2">
+                {city}
+                <button 
+                  onClick={() => handleRemoveCity(city)}
+                  disabled={isSaving}
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted p-0.5 rounded-full"
+                  aria-label={`Remove ${city}`}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+            {cities.length === 0 && <span className="text-sm text-muted-foreground">No cities configured.</span>}
+          </div>
+        </Card>
       </section>
     </div>
   );

@@ -51,7 +51,7 @@ function LandingPage() {
   useEffect(() => {
     if (loading || !user) return;
     if (pLoading) return;
-    if (profile && !profile.onboarded) {
+    if (!profile || !profile.onboarded) {
       nav({ to: "/onboarding" });
     } else {
       nav({ to: "/discover" });

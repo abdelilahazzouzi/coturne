@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Heart, X, MapPin, Briefcase, Sparkles, SlidersHorizontal, Check, ChevronsUpDown, Crown, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CITIES } from "@/lib/cities";
+import { useCities } from "@/lib/cities";
 import { canSeePhoto, canMatch } from "@/lib/visibility";
 import { score, type Profile } from "@/lib/matching";
 import { labelGuests, labelAlcohol, labelPrayer, labelFood } from "@/lib/cultural";
@@ -405,6 +405,7 @@ function ChipGroup({ label, options, selected, onToggle }: { label: string; opti
 function CityCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false);
   const t = useT();
+  const { cities: dynamicCities } = useCities();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -423,7 +424,7 @@ function CityCombobox({ value, onChange }: { value: string; onChange: (v: string
                 <Check className={cn("me-2 h-4 w-4", value === "" ? "opacity-100" : "opacity-0")} />
                 {t("disc.anyCity")}
               </CommandItem>
-              {CITIES.map((c) => (
+              {dynamicCities.map((c) => (
                 <CommandItem key={c} value={c} onSelect={() => { onChange(c); setOpen(false); }}>
                   <Check className={cn("me-2 h-4 w-4", value === c ? "opacity-100" : "opacity-0")} />
                   {c}

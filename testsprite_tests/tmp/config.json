@@ -1,8 +1,9 @@
 {
   "status": "commited",
-  "type": "frontend",
+  "type": "backend",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:8080",
+  "localEndpoint": "http://localhost:8081",
+  "backendAuthType": "public",
   "executionArgs": {
     "projectName": "Coturne",
     "projectPath": "c:\\Users\\abdel\\OneDrive\\Documents\\Coturne",
@@ -13,5 +14,5 @@
       "API_KEY": "sk-user-2N75XDk_iZvaImd5Si4O5JBVqxJ5ZXkY6DaHXUO7Lp4wwAMraiGu_cJobLpIHmjEcMh0QC8LyrwqZy8z8tuUiuI6qpS1hHuFI3YEqs66J7G0JlF4GfdJtF3jARQcn7AzLW4"
     }
   },
-  "serverPort": 58306
+  "serverPort": 61983
 }

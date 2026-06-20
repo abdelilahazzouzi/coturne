@@ -32,7 +32,7 @@ export function RequireAuth({ children, requireOnboarded = true }: { children: R
         nav({ to: "/login" });
       } else {
         setCheckingAal(false);
-        if (requireOnboarded && profile && !profile.onboarded) {
+        if (requireOnboarded && (!profile || !profile.onboarded)) {
           nav({ to: "/onboarding" });
         }
       }
@@ -47,6 +47,6 @@ export function RequireAuth({ children, requireOnboarded = true }: { children: R
     );
   }
   if (!user) return null;
-  if (requireOnboarded && profile && !profile.onboarded) return null;
+  if (requireOnboarded && (!profile || !profile.onboarded)) return null;
   return <>{children}</>;
 }

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "TC001",
+    "title": "get sitemap xml success",
+    "description": "Verify that a GET request to /sitemap.xml returns a 200 status code with a valid XML response containing the main public page URLs for search engine indexing."
+  },
+  {
+    "id": "TC002",
+    "title": "post email queue process authorized",
+    "description": "Verify that a POST request to /lovable/email/queue/process with a valid Authorization header processes queued transactional and authentication emails successfully and returns a 200 status code confirming batch processing."
+  },
+  {
+    "id": "TC003",
+    "title": "post email queue process unauthorized",
+    "description": "Verify that a POST request to /lovable/email/queue/process without an Authorization header returns a 401 Unauthorized status and does not process any emails."
+  },
+  {
+    "id": "TC004",
+    "title": "post email queue process forbidden",
+    "description": "Verify that a POST request to /lovable/email/queue/process with invalid or insufficient permissions returns a 403 Forbidden status and denies queue processing."
+  },
+  {
+    "id": "TC005",
+    "title": "post email queue process server error",
+    "description": "Verify that a POST request to /lovable/email/queue/process when the server configuration is missing or invalid returns a 500 Server configuration error status."
+  }
+]

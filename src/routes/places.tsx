@@ -7,7 +7,7 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CITIES } from "@/lib/cities";
+import { useCities } from "@/lib/cities";
 import { PlaceCard, type PlaceCardData } from "@/components/PlaceCard";
 import { Plus, Home } from "lucide-react";
 
@@ -41,6 +41,7 @@ const PAGE_SIZE = 12;
 
 function PlacesBrowse() {
   const { user } = useAuth();
+  const { cities: dynamicCities } = useCities();
   const [city, setCity] = useState<string>("");
   const [maxRent, setMaxRent] = useState<string>("");
   const [minRent, setMinRent] = useState<string>("");
@@ -150,7 +151,7 @@ function PlacesBrowse() {
             className="flex-1 rounded-md border border-input bg-background px-2 py-2 text-sm"
           >
             <option value="">All cities</option>
-            {CITIES.map((c) => (
+            {dynamicCities.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>

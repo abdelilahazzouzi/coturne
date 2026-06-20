@@ -59,8 +59,7 @@ export const submitOnboarding = createServerFn({ method: "POST" })
 
     const { error: pErr } = await supabase
       .from("profiles")
-      .update({ ...data.profile, onboarded: true } as any)
-      .eq("id", userId);
+      .upsert({ id: userId, ...data.profile, onboarded: true } as any);
     if (pErr) {
       console.error("[submitOnboarding] profile update error:", pErr);
       throw new Response("Could not save profile", { status: 400 });
