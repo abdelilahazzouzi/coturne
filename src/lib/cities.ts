@@ -40,6 +40,7 @@ export function useCities() {
         city: "SYSTEM",
         rent_monthly: 0,
         host_id: userId,
+        status: "published",
       });
       if (error) throw error;
     },
