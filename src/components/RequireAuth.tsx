@@ -32,8 +32,14 @@ export function RequireAuth({ children, requireOnboarded = true }: { children: R
         nav({ to: "/login" });
       } else {
         setCheckingAal(false);
-        if (requireOnboarded && (!profile || !profile.onboarded)) {
-          nav({ to: "/onboarding" });
+        if (profile?.review_status === "pending_minor_review") {
+          if (window.location.pathname !== "/pending-review") {
+            nav({ to: "/pending-review" });
+          }
+        } else if (requireOnboarded && (!profile || !profile.onboarded)) {
+          if (window.location.pathname !== "/onboarding") {
+            nav({ to: "/onboarding" });
+          }
         }
       }
     });

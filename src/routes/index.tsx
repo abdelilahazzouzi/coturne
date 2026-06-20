@@ -40,7 +40,7 @@ function LandingPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("onboarded")
+        .select("onboarded, review_status")
         .eq("id", user!.id)
         .maybeSingle();
       if (error) throw error;
@@ -51,7 +51,9 @@ function LandingPage() {
   useEffect(() => {
     if (loading || !user) return;
     if (pLoading) return;
-    if (!profile || !profile.onboarded) {
+    if (profile?.review_status === "pending_minor_review") {
+      nav({ to: "/pending-review" });
+    } else if (!profile || !profile.onboarded) {
       nav({ to: "/onboarding" });
     } else {
       nav({ to: "/discover" });
