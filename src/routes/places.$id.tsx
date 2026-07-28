@@ -15,6 +15,7 @@ import {
   Pencil,
   MessageCircle,
   Home,
+  Share2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useT } from "@/i18n/LocaleProvider";
@@ -99,6 +100,18 @@ function PlaceDetail() {
     qc.invalidateQueries({ queryKey: ["place-save", id] });
   };
 
+  const shareOnWhatsApp = () => {
+    if (!place) return;
+    const url = window.location.href;
+    const title = place.title || "Colocation sur Roomies";
+    const location = [place.neighborhood, place.city].filter(Boolean).join(", ");
+    const price = `${place.rent_monthly} ${place.currency}/mois`;
+
+    const text = `🏠 *${title}*\n📍 ${location}\n💰 ${price}\n\nTrouvez cette colocation sur Roomies : ${url}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
   const messageHost = async () => {
     if (!user || !place) return;
     // Find an existing conversation via match
@@ -157,6 +170,14 @@ function PlaceDetail() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex items-center gap-2">
+          <Button
+            onClick={shareOnWhatsApp}
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-emerald-600 border-emerald-500/30 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-800 dark:hover:bg-emerald-950/50 font-medium"
+          >
+            <Share2 className="h-4 w-4" /> Share
+          </Button>
           {isOwner && (
             <Button asChild variant="outline" size="sm">
               <Link to="/places/$id/edit" params={{ id: place.id }}>
@@ -295,6 +316,17 @@ function PlaceDetail() {
             </Button>
           </div>
         )}
+
+        <Button
+          onClick={shareOnWhatsApp}
+          variant="outline"
+          className="w-full gap-2.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-800 font-medium h-11 transition-all"
+        >
+          <svg className="h-5 w-5 fill-current text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" aria-hidden>
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.461c-1.852 0-3.664-.497-5.253-1.442l-.376-.225-3.903 1.024 1.042-3.805-.246-.391c-1.036-1.648-1.583-3.595-1.583-5.592 0-5.787 4.708-10.495 10.495-10.495 2.799 0 5.431 1.09 7.41 3.069 1.979 1.979 3.069 4.611 3.069 7.41 0 5.789-4.708 10.495-10.495 10.495m0-19.387c-6.84 0-12.408 5.568-12.408 12.408 0 2.188.572 4.324 1.658 6.205l-1.761 6.43 6.581-1.726c1.815.991 3.864 1.514 5.93 1.514 6.84 0 12.408-5.568 12.408-12.408 0-3.314-1.291-6.425-3.636-8.77-2.345-2.345-5.456-3.636-8.77-3.636" />
+          </svg>
+          Partager sur WhatsApp
+        </Button>
 
         <div className="h-4" />
       </div>
